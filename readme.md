@@ -1,5 +1,5 @@
 # geek-sku
-一款轻量化、强大、简洁、可以根据主题色属性自动生成相应主题色的v3版本的商品多规格sku，仅需要按照指定格式传入sku数组便可以直接使用。
+一款仿京东算法的轻量化、强大、使用简单、拓展性强、可根据配置主题色自动生成相应的组件主题色的商品多规格sku，仅需要按照指定格式传入sku数组便可以直接使用。
 
 ## 使用方法
 从插件时长直接使用HBuilderX 导入插件复制下方的示例即可直接快速使用，然后再根据业务需求进行调整即可。
@@ -13,6 +13,7 @@
             :data="skus"
             defaultTitle="iPhone14 Pro"
             defaultCover="https://inews.gtimg.com/newsapp_bt/0/15259986145/1000"
+            :defaultNum="1"
             btnConfirmText="购买"
             notSelectSku="请选择完整的商品信息"
             @skuChange="skuChange"
@@ -102,6 +103,7 @@
 			:data="skus"
 			defaultTitle="iPhone14 Pro"
 			defaultCover="https://inews.gtimg.com/newsapp_bt/0/15259986145/1000"
+			:defaultNum="1"
 			btnConfirmText="购买"
 			notSelectSku="请选择完整的商品信息"
 			@skuChange="skuChange"
@@ -219,6 +221,7 @@
 | isSelectMinPriceSku | 是否默认选中最低价格的sku | Boolean | true | false |
 | defaultTitle |  默认标题，用于没有选中完整的sku时展示 | String | '商品' | - |
 | defaultCover | 默认封面图，用于没有选中完整的sku时展示 | String | '' | - |
+| defaultNum | 默认购买商品数量 | Number | 1 | - |
 | themeColor | 主题色，需要传入一个数组长度为3的数组，分别对应rgb三个颜色的值，例如: [84, 164, 255] | Array | [84, 164, 255] | - |
 | btnConfirmText | 确认按钮文字 | String | '确认' | - |
 | notStockText | 库存不足文字 | String | '库存不足' | - |
@@ -233,3 +236,8 @@
 | numChange | 输入框内数量发生改变时触发事件 | e = num, 返回输入框数量 |
 | close | 关闭sku组件触发事件 | - |
 | open | 打开sku组件触发事件 | - |
+
+### Methods
+| 方法名 | 说明 |
+| --- | --- |
+| resetNum | 重置购买数量 |
