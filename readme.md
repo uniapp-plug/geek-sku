@@ -11,8 +11,8 @@
         <geek-sku
             v-model="skuShow"
             :data="skus"
-            defaultTitle="iPhone14 Pro"
-            defaultCover="https://inews.gtimg.com/newsapp_bt/0/15259986145/1000"
+            defaultTitle="iPhone14 Pro MAX"
+            defaultCover="http://rn8zfvrr0.hn-bkt.clouddn.com/e40744e32a2930f945e67da79a35f270.jpg?e=1672666137&token=0qmhoqQQZ4ggfGZOevcNXE4wYe_IZD3Y5xm8ZZ5Y:bxn-lcJPnFNY22kGWwh5MRgdGwM="
             :defaultNum="1"
             btnConfirmText="购买"
             notSelectSku="请选择完整的商品信息"
@@ -32,49 +32,54 @@
     // sku列表
     let skus = ref([
         {
-            id: 1,
-            price: 7500,
-            stock: 30,
-            sku_attrs: {
-                '机身颜色': '暗紫色',
-                '储存容量': '128G',
-            }
+        	id: 1,
+        	price: 7500,
+        	stock: 30,
+        	sku_attrs: {
+        		'机身颜色': '暗紫色',
+        		'储存容量': '128G',
+        		'套装': '快充套装'
+        	}
         },
         {
-            id: 2,
-            price: 8500,
-            stock: 10,
-            sku_attrs: {
-                '机身颜色': '暗紫色',
-                '储存容量': '256G',
-            }
+        	id: 2,
+        	price: 8500,
+        	stock: 10,
+        	sku_attrs: {
+        		'机身颜色': '暗紫色',
+        		'储存容量': '256G',
+        		'套装': '快充套装'
+        	}
         },
         {
-            id: 3,
-            price: 9500,
-            stock: 0,
-            sku_attrs: {
-                '机身颜色': '暗紫色',
-                '储存容量': '512G',
-            }
+        	id: 3,
+        	price: 9500,
+        	stock: 0,
+        	sku_attrs: {
+        		'机身颜色': '暗紫色',
+        		'储存容量': '512G',
+        		'套装': 'AirPods套装'
+        	}
         },
         {
-            id: 4,
-            price: 9200,
-            stock: 60,
-            sku_attrs: {
-                '机身颜色': '银色',
-                '储存容量': '512G',
-            }
+        	id: 4,
+        	price: 9200,
+        	stock: 60,
+        	sku_attrs: {
+        		'机身颜色': '银色',
+        		'储存容量': '512G',
+        		'套装': 'AirPods套装'
+        	}
         },
         {
-            id: 5,
-            price: 9200,
-            stock: 80,
-            sku_attrs: {
-                '机身颜色': '金色',
-                '储存容量': '512G',
-            }
+        	id: 5,
+        	price: 9200,
+        	stock: 80,
+        	sku_attrs: {
+        		'机身颜色': '金色',
+        		'储存容量': '512G',
+        		'套装': 'AirPods3套装'
+        	}
         }
     ])
     
@@ -101,8 +106,8 @@
 		<geek-sku
 			v-model="skuShow"
 			:data="skus"
-			defaultTitle="iPhone14 Pro"
-			defaultCover="https://inews.gtimg.com/newsapp_bt/0/15259986145/1000"
+			defaultTitle="iPhone14 Pro MAX"
+			defaultCover="http://rn8zfvrr0.hn-bkt.clouddn.com/e40744e32a2930f945e67da79a35f270.jpg?e=1672666137&token=0qmhoqQQZ4ggfGZOevcNXE4wYe_IZD3Y5xm8ZZ5Y:bxn-lcJPnFNY22kGWwh5MRgdGwM="
 			:defaultNum="1"
 			btnConfirmText="购买"
 			notSelectSku="请选择完整的商品信息"
@@ -121,13 +126,15 @@
 				// 是否显示组件
 				skuShow: false,
 				// sku列表
-				skus: [{
+				skus: [
+					{
 						id: 1,
 						price: 7500,
 						stock: 30,
 						sku_attrs: {
 							'机身颜色': '暗紫色',
-							'储存容量': '128G'
+							'储存容量': '128G',
+							'套装': '快充套装'
 						}
 					},
 					{
@@ -136,7 +143,8 @@
 						stock: 10,
 						sku_attrs: {
 							'机身颜色': '暗紫色',
-							'储存容量': '256G'
+							'储存容量': '256G',
+							'套装': '快充套装'
 						}
 					},
 					{
@@ -145,7 +153,8 @@
 						stock: 0,
 						sku_attrs: {
 							'机身颜色': '暗紫色',
-							'储存容量': '512G'
+							'储存容量': '512G',
+							'套装': 'AirPods套装'
 						}
 					},
 					{
@@ -154,7 +163,8 @@
 						stock: 60,
 						sku_attrs: {
 							'机身颜色': '银色',
-							'储存容量': '512G'
+							'储存容量': '512G',
+							'套装': 'AirPods套装'
 						}
 					},
 					{
@@ -163,7 +173,8 @@
 						stock: 80,
 						sku_attrs: {
 							'机身颜色': '金色',
-							'储存容量': '512G'
+							'储存容量': '512G',
+							'套装': 'AirPods3套装'
 						}
 					}
 				]
@@ -188,6 +199,8 @@
     }
 </style>
 ```
+
+
 ## 补充
 在sku列表数组中的每一项都可以有title、logo属性，这样在选择完整的sku后就会自动展示本项sku的title、logo。
 
@@ -210,6 +223,23 @@
 	]
 ```
 
+
+## 默认选中指定sku
+``` html
+<!-- selectSkuIndex 传入要选中的sku下标即可 -->
+<geek-sku
+	v-model="skuShow"
+	:data="skus"
+	defaultTitle="iPhone14 Pro MAX"
+	defaultCover="http://rn8zfvrr0.hn-bkt.clouddn.com/e40744e32a2930f945e67da79a35f270.jpg?e=1672666137&token=0qmhoqQQZ4ggfGZOevcNXE4wYe_IZD3Y5xm8ZZ5Y:bxn-lcJPnFNY22kGWwh5MRgdGwM="
+	btnConfirmText="购买"
+	notSelectSku="请选择完整的商品信息"
+	:isShowStock="false"
+	:selectSkuIndex="3"
+	@skuChange="skuChange"
+	@confirm="skuConfirm"
+></geek-sku>
+```
 ## API
 
 ### Props
@@ -219,6 +249,7 @@
 | value/modelValue | 是否显示sku组件 | Boolean | false | true |
 | isMaskClose | 是否可以点击遮罩层关闭 | Boolean | false | true |
 | isSelectMinPriceSku | 是否默认选中最低价格的sku | Boolean | true | false |
+| selectSkuIndex | 默认选中的sku下标 | Number | null | false |
 | defaultTitle |  默认标题，用于没有选中完整的sku时展示 | String | '商品' | - |
 | defaultCover | 默认封面图，用于没有选中完整的sku时展示 | String | '' | - |
 | defaultNum | 默认购买商品数量 | Number | 1 | - |

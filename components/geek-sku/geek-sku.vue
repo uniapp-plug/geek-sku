@@ -71,6 +71,7 @@
 	 * @property {Boolean} value 是否显示sku组件(默认值: false, v2显示)。
 	 * @property {Boolean} isMaskClose 是否可以点击遮罩层关闭(默认值: false)。
 	 * @property {Boolean} isSelectMinPriceSku 是否默认选中最低价格的sku(默认值: true)。
+	 * @property {Boolean} selectSkuIndex 默认选中的sku下标。
 	 * @property {String} defaultTitle 默认标题，用于没有选中完整的sku时展示(默认值: '商品')。
 	 * @property {String} defaultCover 默认封面图，用于没有选中完整的sku时展示。
 	 * @property {Number} defaultNum 默认购买商品数量。
@@ -123,6 +124,11 @@
 			isSelectMinPriceSku: {
 				default: true,
 				type: Boolean
+			},
+			// 默认选中的sku下标
+			selectSkuIndex: {
+				default: null,
+				type: Number
 			},
 			// 默认标题
 			defaultTitle: {
@@ -478,6 +484,20 @@
 			},
 			
 			/**
+			 * 选中某项sku
+			 * @param {Number} index 选中的skuIndex
+			 */
+			selectAppointSku(index) {
+				if(!this.data[index]) return console.error('请输入正确的sku下标'); 
+				let sku_attrs = this.data[index].sku_attrs;
+				for(var key in sku_attrs) {
+					// 找出对应项并选中
+					this.r.result[key][sku_attrs[key]].active = true;
+				}
+				this.updateStatus(this.getSelectedItem());
+			},
+			
+			/**
 			 * 找出区间数据
 			 */
 			findAreaData() {
@@ -540,8 +560,11 @@
 				// 找到区间数据
 				this.findAreaData();
 				
-				// 如果需要选中默认最便宜的sku
-				if(this.isSelectMinPriceSku) {
+				// 如果需要选中某项sku
+				if(this.selectSkuIndex) {
+					this.selectAppointSku(this.selectSkuIndex);
+				} else if(this.isSelectMinPriceSku) {
+					// 如果需要选中默认最便宜的sku
 					this.selectMinPriceSku();
 				}
 			},
@@ -627,6 +650,9 @@
 			},
 			themeColor(n) {
 				this.joinThemColor(n);
+			},
+			selectSkuIndex(n) {
+				this.selectAppointSku(n);
 			}
 		},
 		// 挂载时
@@ -746,7 +772,7 @@
 			}
 		
 			.specsList {
-				max-height: 350rpx;
+				max-height: 45vh;
 				overflow-y: auto;
 				margin-bottom: 30rpx;
 				.item {
