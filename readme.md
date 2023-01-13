@@ -249,7 +249,7 @@
 | value/modelValue | 是否显示sku组件 | Boolean | false | true |
 | isMaskClose | 是否可以点击遮罩层关闭 | Boolean | false | true |
 | isSelectMinPriceSku | 是否默认选中最低价格的sku | Boolean | true | false |
-| selectSkuIndex | 默认选中的sku下标 | Number | null | false |
+| selectSkuIndex | 默认选中的sku下标 | Number | null | - |
 | defaultTitle |  默认标题，用于没有选中完整的sku时展示 | String | '商品' | - |
 | defaultCover | 默认封面图，用于没有选中完整的sku时展示 | String | '' | - |
 | defaultNum | 默认购买商品数量 | Number | 1 | - |
