@@ -9,16 +9,15 @@
 <template>
     <view class="test">
         <geek-sku
-			v-model="skuShow"
-			:data="skus"
-			:themeColor="[226, 35, 26]"
-			defaultCover="https://img-blog.csdnimg.cn/img_convert/587467738dfa4de190a7cd9818ca59fb.jpeg"
-			:isShowStock="false"
-			btnConfirmText="购买"
-			notSelectSku="请选择完整的商品信息"
-			@skuChange="skuChange"
-			@confirm="skuConfirm"
-		></geek-sku>
+        	v-model="skuShow"
+        	:data="skus"
+        	:themeColor="[226, 35, 26]"
+        	defaultCover="https://img-blog.csdnimg.cn/img_convert/587467738dfa4de190a7cd9818ca59fb.jpeg"
+        	btnConfirmText="购买"
+        	notSelectSku="请选择完整的商品信息"
+        	@skuChange="skuChange"
+        	@confirm="skuConfirm"
+        ></geek-sku>
         <!-- 打开sku组件 -->
         <button @click="skuShow = true">打开sku组件</button>
     </view>
@@ -108,7 +107,6 @@
 			:data="skus"
 			:themeColor="[226, 35, 26]"
 			defaultCover="https://img-blog.csdnimg.cn/img_convert/587467738dfa4de190a7cd9818ca59fb.jpeg"
-			:isShowStock="false"
 			btnConfirmText="购买"
 			notSelectSku="请选择完整的商品信息"
 			@skuChange="skuChange"
@@ -221,24 +219,78 @@
 	]
 ```
 
-## 带图sku
-仅需要在需要展示的图片的sku属性上稍微修改一下就行了，将原来的 `属性名:属性值` 变成 `属性名: {name: 属性名, img: '图片链接'}`, 这里需要注意一点所有相同sku属性都需要这样使用。
+## 带图sku数据示例
+仅需要在需要展示的图片的sku属性上稍微修改一下就行了，将原来的 `属性名:属性值` 变成 `属性名: {name: 属性名, img: '图片链接'}`。
 
-如下:
+如下: 直接粘贴使用即可
 ``` javascript
-{
-    id: 1,
-    price: 7000,
-    stock: 30,
-    sku_attrs: {
-        '机身颜色': {
-            name: '深空黑色',
-            img: 'https://img-blog.csdnimg.cn/img_convert/c7ff1eaa3cb84945baa960230a758cbd.jpeg',
-        },
-        '储存容量': '128G',
-        '套装': '快充套装'
-    }
-}
+[
+	{
+		id: 1,
+		price: 7000,
+		stock: 30,
+		sku_attrs: {
+			'机身颜色': {
+				name: '深空黑色',
+				img: 'https://img-blog.csdnimg.cn/img_convert/c7ff1eaa3cb84945baa960230a758cbd.jpeg',
+			},
+			'储存容量': '128G',
+			'套装': '快充套装'
+		}
+	},
+	{
+		id: 2,
+		price: 8500,
+		stock: 10,
+		sku_attrs: {
+			'机身颜色': {
+				name: '暗紫色',
+				img: 'https://img-blog.csdnimg.cn/img_convert/0c16e250057a4ce38f8d7fc6b187a3b4.jpeg',
+			},
+			'储存容量': '256G',
+			'套装': '快充套装'
+		}
+	},
+	{
+		id: 3,
+		price: 9500,
+		stock: 0,
+		sku_attrs: {
+			'机身颜色': {
+				name: '暗紫色',
+				img: 'https://img-blog.csdnimg.cn/img_convert/0c16e250057a4ce38f8d7fc6b187a3b4.jpeg',
+			},
+			'储存容量': '512G',
+			'套装': 'AirPods套装'
+		}
+	},
+	{
+		id: 4,
+		price: 9200,
+		stock: 60,
+		sku_attrs: {
+			'机身颜色': {
+				name: '银色',
+				img: 'https://img-blog.csdnimg.cn/img_convert/a4694b8a900140569e10ab8fa3e89445.jpeg',
+			},
+			'储存容量': '512G',
+			'套装': 'AirPods套装'
+		}
+	},
+	{
+		id: 5,
+		price: 9200,
+		stock: 80,
+		sku_attrs: {
+			'机身颜色': {
+				name: '金色',
+				img: 'https://img-blog.csdnimg.cn/img_convert/a439916f21f141428e3836bff8b5d50b.jpeg',
+			},
+			'储存容量': '512G',
+			'套装': 'AirPods3套装'
+		}
+	}
+]
 ```
 
 ## 默认选中指定sku
