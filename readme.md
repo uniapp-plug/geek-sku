@@ -1,5 +1,5 @@
 # geek-sku
-一款仿京东算法的轻量化、强大、使用简单、拓展性强、可根据配置主题色自动生成相应的组件主题色的商品多规格sku，仅需要按照指定格式传入sku数组便可以直接使用。
+一款仿京东算法的轻量化、强大、拓展性强、可使用带图sku、可根据配置主题色自动生成相应的组件主题色的商品多规格sku，仅需要按照指定格式传入sku数组便可以直接使用。
 
 ## 使用方法
 从插件时长直接使用HBuilderX 导入插件复制下方的示例即可直接快速使用，然后再根据业务需求进行调整即可。
@@ -9,16 +9,16 @@
 <template>
     <view class="test">
         <geek-sku
-            v-model="skuShow"
-            :data="skus"
-            defaultTitle="iPhone14 Pro MAX"
-            defaultCover="http://rn8zfvrr0.hn-bkt.clouddn.com/e40744e32a2930f945e67da79a35f270.jpg?e=1672666137&token=0qmhoqQQZ4ggfGZOevcNXE4wYe_IZD3Y5xm8ZZ5Y:bxn-lcJPnFNY22kGWwh5MRgdGwM="
-            :defaultNum="1"
-            btnConfirmText="购买"
-            notSelectSku="请选择完整的商品信息"
-            @skuChange="skuChange"
-            @confirm="skuConfirm"
-        ></geek-sku>
+			v-model="skuShow"
+			:data="skus"
+			:themeColor="[226, 35, 26]"
+			defaultCover="https://img-blog.csdnimg.cn/img_convert/587467738dfa4de190a7cd9818ca59fb.jpeg"
+			:isShowStock="false"
+			btnConfirmText="购买"
+			notSelectSku="请选择完整的商品信息"
+			@skuChange="skuChange"
+			@confirm="skuConfirm"
+		></geek-sku>
         <!-- 打开sku组件 -->
         <button @click="skuShow = true">打开sku组件</button>
     </view>
@@ -32,54 +32,54 @@
     // sku列表
     let skus = ref([
         {
-        	id: 1,
-        	price: 7500,
-        	stock: 30,
-        	sku_attrs: {
-        		'机身颜色': '暗紫色',
-        		'储存容量': '128G',
-        		'套装': '快充套装'
-        	}
+            id: 1,
+            price: 7000,
+            stock: 30,
+            sku_attrs: {
+                '机身颜色': '深空黑色',
+                '储存容量': '128G',
+                '套装': '快充套装'
+            }
         },
         {
-        	id: 2,
-        	price: 8500,
-        	stock: 10,
-        	sku_attrs: {
-        		'机身颜色': '暗紫色',
-        		'储存容量': '256G',
-        		'套装': '快充套装'
-        	}
+            id: 2,
+            price: 8500,
+            stock: 10,
+            sku_attrs: {
+                '机身颜色': '暗紫色',
+                '储存容量': '256G',
+                '套装': '快充套装'
+            }
         },
         {
-        	id: 3,
-        	price: 9500,
-        	stock: 0,
-        	sku_attrs: {
-        		'机身颜色': '暗紫色',
-        		'储存容量': '512G',
-        		'套装': 'AirPods套装'
-        	}
+            id: 3,
+            price: 9500,
+            stock: 0,
+            sku_attrs: {
+                '机身颜色': '暗紫色',
+                '储存容量': '512G',
+                '套装': 'AirPods套装'
+            }
         },
         {
-        	id: 4,
-        	price: 9200,
-        	stock: 60,
-        	sku_attrs: {
-        		'机身颜色': '银色',
-        		'储存容量': '512G',
-        		'套装': 'AirPods套装'
-        	}
+            id: 4,
+            price: 9200,
+            stock: 60,
+            sku_attrs: {
+                '机身颜色': '银色',
+                '储存容量': '512G',
+                '套装': 'AirPods套装'
+            }
         },
         {
-        	id: 5,
-        	price: 9200,
-        	stock: 80,
-        	sku_attrs: {
-        		'机身颜色': '金色',
-        		'储存容量': '512G',
-        		'套装': 'AirPods3套装'
-        	}
+            id: 5,
+            price: 9200,
+            stock: 80,
+            sku_attrs: {
+                '机身颜色': '金色',
+                '储存容量': '512G',
+                '套装': 'AirPods3套装'
+            }
         }
     ])
     
@@ -106,9 +106,9 @@
 		<geek-sku
 			v-model="skuShow"
 			:data="skus"
-			defaultTitle="iPhone14 Pro MAX"
-			defaultCover="http://rn8zfvrr0.hn-bkt.clouddn.com/e40744e32a2930f945e67da79a35f270.jpg?e=1672666137&token=0qmhoqQQZ4ggfGZOevcNXE4wYe_IZD3Y5xm8ZZ5Y:bxn-lcJPnFNY22kGWwh5MRgdGwM="
-			:defaultNum="1"
+			:themeColor="[226, 35, 26]"
+			defaultCover="https://img-blog.csdnimg.cn/img_convert/587467738dfa4de190a7cd9818ca59fb.jpeg"
+			:isShowStock="false"
 			btnConfirmText="购买"
 			notSelectSku="请选择完整的商品信息"
 			@skuChange="skuChange"
@@ -127,57 +127,57 @@
 				skuShow: false,
 				// sku列表
 				skus: [
-					{
-						id: 1,
-						price: 7500,
-						stock: 30,
-						sku_attrs: {
-							'机身颜色': '暗紫色',
-							'储存容量': '128G',
-							'套装': '快充套装'
-						}
-					},
-					{
-						id: 2,
-						price: 8500,
-						stock: 10,
-						sku_attrs: {
-							'机身颜色': '暗紫色',
-							'储存容量': '256G',
-							'套装': '快充套装'
-						}
-					},
-					{
-						id: 3,
-						price: 9500,
-						stock: 0,
-						sku_attrs: {
-							'机身颜色': '暗紫色',
-							'储存容量': '512G',
-							'套装': 'AirPods套装'
-						}
-					},
-					{
-						id: 4,
-						price: 9200,
-						stock: 60,
-						sku_attrs: {
-							'机身颜色': '银色',
-							'储存容量': '512G',
-							'套装': 'AirPods套装'
-						}
-					},
-					{
-						id: 5,
-						price: 9200,
-						stock: 80,
-						sku_attrs: {
-							'机身颜色': '金色',
-							'储存容量': '512G',
-							'套装': 'AirPods3套装'
-						}
-					}
-				]
+                    {
+                        id: 1,
+                        price: 7000,
+                        stock: 30,
+                        sku_attrs: {
+                            '机身颜色': '深空黑色',
+                            '储存容量': '128G',
+                            '套装': '快充套装'
+                        }
+                    },
+                    {
+                        id: 2,
+                        price: 8500,
+                        stock: 10,
+                        sku_attrs: {
+                            '机身颜色': '暗紫色',
+                            '储存容量': '256G',
+                            '套装': '快充套装'
+                        }
+                    },
+                    {
+                        id: 3,
+                        price: 9500,
+                        stock: 0,
+                        sku_attrs: {
+                            '机身颜色': '暗紫色',
+                            '储存容量': '512G',
+                            '套装': 'AirPods套装'
+                        }
+                    },
+                    {
+                        id: 4,
+                        price: 9200,
+                        stock: 60,
+                        sku_attrs: {
+                            '机身颜色': '银色',
+                            '储存容量': '512G',
+                            '套装': 'AirPods套装'
+                        }
+                    },
+                    {
+                        id: 5,
+                        price: 9200,
+                        stock: 80,
+                        sku_attrs: {
+                            '机身颜色': '金色',
+                            '储存容量': '512G',
+                            '套装': 'AirPods3套装'
+                        }
+                    }
+                ]
 			}
 		},
 		onLoad() {},
@@ -200,9 +200,8 @@
 </style>
 ```
 
-
-## 补充
-在sku列表数组中的每一项都可以有title、logo属性，这样在选择完整的sku后就会自动展示本项sku的title、logo。
+## 补充(ps: 在不使用带图sku时生效)
+在sku列表数组中的每一项都可以有logo属性，这样在选择完整的sku后就会自动展示本项sku的logo。
 
 例如: 
 ``` javascript
@@ -211,7 +210,6 @@
 		{
 			id: 5,
 			price: 9200,
-			title: 'iphone14 pro max 金色 512G',
 			logo: '图片路径',
 			stock: 80,
 			sku_attrs: {
@@ -223,6 +221,25 @@
 	]
 ```
 
+## 带图sku
+仅需要在需要展示的图片的sku属性上稍微修改一下就行了，将原来的 `属性名:属性值` 变成 `属性名: {name: 属性名, img: '图片链接'}`, 这里需要注意一点所有相同sku属性都需要这样使用。
+
+如下:
+``` javascript
+{
+    id: 1,
+    price: 7000,
+    stock: 30,
+    sku_attrs: {
+        '机身颜色': {
+            name: '深空黑色',
+            img: 'https://img-blog.csdnimg.cn/img_convert/c7ff1eaa3cb84945baa960230a758cbd.jpeg',
+        },
+        '储存容量': '128G',
+        '套装': '快充套装'
+    }
+}
+```
 
 ## 默认选中指定sku
 ``` html
@@ -250,7 +267,6 @@
 | isMaskClose | 是否可以点击遮罩层关闭 | Boolean | false | true |
 | isSelectMinPriceSku | 是否默认选中最低价格的sku | Boolean | true | false |
 | selectSkuIndex | 默认选中的sku下标 | Number | null | - |
-| defaultTitle |  默认标题，用于没有选中完整的sku时展示 | String | '商品' | - |
 | defaultCover | 默认封面图，用于没有选中完整的sku时展示 | String | '' | - |
 | defaultNum | 默认购买商品数量 | Number | 1 | - |
 | themeColor | 主题色，需要传入一个数组长度为3的数组，分别对应rgb三个颜色的值，例如: [84, 164, 255] | Array | [84, 164, 255] | - |

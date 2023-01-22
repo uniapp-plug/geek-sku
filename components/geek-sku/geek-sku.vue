@@ -3,17 +3,17 @@
 		<view class="shopSpecsPopup">
 			<image class="close" src="../../img/close.png" @click="close"></image>
 			<view class="content">
-				<view class="info flex">
-					<view class="cover" :style="{backgroundImage: `url(${selectSku.logo || defaultCover})`}"></view>
-					<view class="right">
-						<view class="title ellipsis t-w">
-							{{selectSku.title || defaultTitle}}
-						</view>
-						<view class="price flex f-y-c" :style="{color: themeRGB}">
+				<view class="info flex f-y-c">
+					<view class="cover" v-if="!isUseImgSku" :style="{backgroundImage: `url(${selectSku.logo || defaultCover})`}"></view>
+					<view class="right t-w" :class="{useImgSku: isUseImgSku}">
+						<view class="price flex f-y-e" :style="{color: themeRGB}">
 							<view class="uity">￥</view>{{selectSku.id ? selectSku.price : `${showAreaPrice[0]}-${showAreaPrice[1]}`}}
 						</view>
 						<view class="stock" v-if="isShowStock">
 							库存: {{selectSku.id ? selectSku.stock : `${showAreaStock[0]}-${showAreaStock[1]}`}}
+						</view>
+						<view class="actSkuStr">
+							{{getSelectedSkuAttrStr}}
 						</view>
 					</view>
 				</view>
@@ -28,15 +28,35 @@
 							<view class="specs"
 								v-for="(sku, skuKey) in skuArr"
 								:key="skuKey"
-								:class="{disabled: sku.disabled}"
+								:class="{disabled: sku.disabled, act: sku.active}"
 								:style="{
-									backgroundColor: sku.active ? themeRGBA : '',
 									color: sku.active ? themeRGB : '' ,
-									border: sku.active ? `2rpx dashed ${themeRGB}` : '' 
+									border: sku.active ? `3rpx solid ${themeRGB}` : '',
+									borderRadius: sku.img ? '15rpx' : '10rpx'
 								}"
 								@click="bindEvent(sku, skuArr, skuArrKey)"
 							>
-								{{sku.value}}
+								<!-- 带有图片的sku -->
+								<view v-if="sku.img" class="specs_img_box">
+									<!-- 禁用遮罩层 -->
+									<view class="specs_img_box_mask"></view>
+									<!-- 预览按钮 -->
+									<view class="specs_img_box_preview flex f-y-c f-x-c" @click.stop="preview(sku.img)">
+										<image src="../../img/preview.png"></image>
+									</view>
+									<!-- 图片 -->
+									<view class="specs_img_box_cover bgImg" :style="{
+										backgroundImage: `url(${sku.img})`
+									}"></view>
+									<!-- 文字 -->
+									<view class="specs_img_box_text t-c">{{sku.value}}</view>
+								</view>
+								<!-- 普通sku -->
+								<view v-else class="specs_common" :style="{
+									backgroundColor: sku.active ? themeRGBA : ''
+								}">
+									{{sku.value}}
+								</view>
 							</view>
 						</view>
 					</view>
@@ -71,7 +91,6 @@
 	 * @property {Boolean} isMaskClose 是否可以点击遮罩层关闭(默认值: false)。
 	 * @property {Boolean} isSelectMinPriceSku 是否默认选中最低价格的sku(默认值: true)。
 	 * @property {Boolean} selectSkuIndex 默认选中的sku下标。
-	 * @property {String} defaultTitle 默认标题，用于没有选中完整的sku时展示(默认值: '商品')。
 	 * @property {String} defaultCover 默认封面图，用于没有选中完整的sku时展示。
 	 * @property {Number} defaultNum 默认购买商品数量。
 	 * @property {Array} themeColor 主题色，需要传入一个数组长度为3的数组，分别对应rgb三个颜色的值，例如: [84, 164, 255]。
@@ -87,7 +106,6 @@
 	 * @example <geek-sku 
 					v-model="skuShow" 
 					:data="skus"
-					:defaultTitle="title" 
 					:defaultCover="logo"
 					@skuChange="skuChange"
 					@confirm="buyShop"
@@ -128,11 +146,6 @@
 			selectSkuIndex: {
 				default: null,
 				type: Number
-			},
-			// 默认标题
-			defaultTitle: {
-				default: "商品标题",
-				type: String
 			},
 			// 默认封面图
 			defaultCover: {
@@ -196,6 +209,8 @@
 				themeRGB: '',
 				// 主题色RGBA
 				themeRGBA: '',
+				// 是否使用带图sku
+				isUseImgSku: false,
 				// 是否v3
 				// #ifdef VUE3
 				isV3: true,
@@ -216,13 +231,17 @@
 					
 				for (var i = 0; i < data.length; i++) {
 					var item = data[i].sku_attrs;
-					var values = []
+					var values = [];
 					
 					for (var j = 0; j < keys.length; j++) {
-						var key = keys[j]
-						if (!result[key]) result[key] = []
-						if (result[key].indexOf(item[key]) < 0) result[key].push(item[key])
-						values.push(item[key])
+						var key = keys[j];
+						// 属性名
+						let item_name = this.getObjAppointAttr(item[key]);
+						
+						if (!result[key]) result[key] = [];
+						if (result[key].indexOf(item_name) < 0) result[key].push(item[key]);
+						
+						values.push(item_name);
 					}
 					
 					allKeys.push({
@@ -234,11 +253,21 @@
 				for(var key in result) {
 					let obj = {};
 					result[key].forEach(item=>{
-						obj[item] = {
-							value: item,
-							disabled: false,
-							active: false
+						// 属性名
+						let item_name = this.getObjAppointAttr(item);
+						// 如果本次的属性不存在 则 将该属性设置为空对象
+						if(!obj[item_name]) obj[item_name] = {};
+						// 本次要操作的属性 下面得赋值是为了防止已有属性被覆盖
+						obj[item_name].value = item_name;
+						obj[item_name].disabled = false;
+						obj[item_name].active = false;
+						
+						// 如果该sku属性是对象则取其中的name属性
+						if(Object.prototype.toString.call(item) === '[object Object]') {
+							obj[item_name] = {...obj[item_name], ...item};
+							this.isUseImgSku = true;
 						}
+						
 					})
 					result[key] = obj;
 				}
@@ -253,7 +282,7 @@
 				for (var i = 0; i < arr.length; i++) {
 					result.push(arr[i].path)
 				}
-				return result
+				return result;
 			},
 			/**
 			 * 取得集合的所有子集「幂集」
@@ -294,18 +323,17 @@
 			 */
 			buildResult(items) {
 				var allKeys = this.getAllKeys(items);
-			
+				
 				for (var i = 0; i < allKeys.length; i++) {
-					var curr = allKeys[i]
-					var sku = items[i].sku
-					var values = curr.split(this.spliter)
-			
+					var curr = allKeys[i];
+					var sku = items[i].sku;
+					var values = curr.split(this.spliter);
 					var allSets = this.powerset(values)
 			
 					// 每个组合的子集
 					for (var j = 0; j < allSets.length; j++) {
 						var set = allSets[j]
-						var key = set.join(this.spliter)
+						var key = set.join(this.spliter);
 			
 						if (this.res[key]) {
 							this.res[key].skus.push(sku)
@@ -423,7 +451,9 @@
 					// 如果找到该sku
 					if(sku) {
 						// 根据sku的sku属性(唯一标识，通常来说会是id)找到源数据中的匹配的那一项并选中;
-						this.selectSku = JSON.parse(JSON.stringify(this.data.find(item=> item.id == sku.sku)))
+						this.selectSku = JSON.parse(JSON.stringify(this.data.find(item=> item.id == sku.sku)));
+						// 重置数量
+						this.num = this.defaultNum;
 					}
 				} else {
 					this.selectSku = {};
@@ -475,9 +505,11 @@
 						minPriceSku = sku
 					}
 				})
+				
 				for(var key in minPriceSku.sku_attrs) {
+					let item_name = this.getObjAppointAttr(minPriceSku.sku_attrs[key]);
 					// 找出对应项并选中
-					this.r.result[key][minPriceSku.sku_attrs[key]].active = true;
+					this.r.result[key][item_name].active = true;
 				}
 				this.updateStatus(this.getSelectedItem());
 			},
@@ -490,8 +522,9 @@
 				if(!this.data[index]) return console.error('请输入正确的sku下标'); 
 				let sku_attrs = this.data[index].sku_attrs;
 				for(var key in sku_attrs) {
+					let item_name = this.getObjAppointAttr(sku_attrs[key]);
 					// 找出对应项并选中
-					this.r.result[key][sku_attrs[key]].active = true;
+					this.r.result[key][item_name].active = true;
 				}
 				this.updateStatus(this.getSelectedItem());
 			},
@@ -621,6 +654,47 @@
 			// 重置购买数量
 			resetNum() {
 				this.num = this.defaultNum;
+			},
+			
+			// 获取对象中指定属性
+			getObjAppointAttr(obj, attr = 'name') {
+				// 如果该sku属性是对象则取其中的name属性
+				if(Object.prototype.toString.call(obj) === '[object Object]') {
+					return obj[attr];
+				}else {
+					return obj;
+				}
+			},
+			
+			// 预览图片
+			preview(img) {
+				uni.previewImage({
+					urls: [img]
+				});
+			}
+		},
+		// computed 计算属性
+		computed: {
+			// 获取已选中的sku属性字符串
+			getSelectedSkuAttrStr() {
+				let attrArr = this.getSelectedItem();
+				// 如果有未选中的数据
+				if(attrArr.findIndex(item=> !item) !== -1) {
+					// 获取sku属性名
+					let resultArr = Object.keys(this.r.result);
+					// 未选中的sku属性名
+					let noAttrNameArr = [];
+					attrArr.forEach((item, index)=>{
+						if(!item) {
+							noAttrNameArr.push(resultArr[index]);
+						}
+					})
+					
+					return `请选择：${noAttrNameArr.join('、')}`
+				} else {
+					return `已选择：${attrArr.join('，')}`
+				}
+				return this.getSelectedItem();
 			}
 		},
 		// 监听
@@ -728,10 +802,18 @@
 					background-size: cover;
 					background-repeat: no-repeat;
 					background-position: center;
+					background-color: #1cffe5;
 				}
 		
 				.right {
 					width: calc(100% - 220rpx);
+					&.useImgSku {
+						width: 100%;
+						text-align: center;
+						.price {
+							justify-content: center;
+						}
+					}
 		
 					.title {
 						font-size: 32rpx;
@@ -742,18 +824,25 @@
 					}
 		
 					.price {
-						font-size: 36rpx;
+						font-size: 44rpx;
 						font-weight: bold;
-						margin-bottom: 20rpx;
+						margin-bottom: 25rpx;
+						line-height: 1;
 		
 						.uity {
-							font-size: 26rpx;
+							font-size: 34rpx;
 						}
 					}
 					
 					.stock {
 						font-size: 30rpx;
 						color: #999999;
+						margin-bottom: 15rpx;
+					}
+					
+					.actSkuStr {
+						color: #333;
+						font-size: 30rpx;
 					}
 				}
 			}
@@ -783,19 +872,65 @@
 				
 					.specsValueList {
 						.specs {
-							padding: 14rpx 40rpx;
 							background: #fff;
-							border-radius: 10rpx;
 							font-size: 28rpx;
 							font-weight: 500;
-							color: #999999;
 							margin-bottom: 30rpx;
 							margin-right: 30rpx;
-							border: 2rpx solid #e4e4e4;
+							border: 3rpx solid #e4e4e4;
+							overflow: hidden;
+							
+							&:not(&.act) {
+								.specs_common {
+									color: #999999;
+								}
+								.specs_img_box {
+									color: #fff;
+								}
+							}
 							
 							&.disabled {
-								background-color: #f3f3f3;
-								border: 2rpx solid transparent;
+								border: 3rpx solid transparent;
+								.specs_common {
+									background-color: #f3f3f3;
+								}
+								.specs_img_box .specs_img_box_mask{
+									position: absolute;
+									left: 0;
+									right: 0;
+									bottom: 0;
+									top: 0;
+									background-color: rgba(0, 0, 0, 0.2);
+								}
+							}
+							
+							&_img_box {
+								position: relative;
+								&_preview {
+									position: absolute;
+									background: rgba(0, 0, 0, 0.7);
+									border-radius: 50%;
+									padding: 10rpx;
+									right: 8rpx;
+									top: 8rpx;
+									image {
+										width: 25rpx;
+										height: 25rpx;
+										transform: scale(1.2);
+									}
+								}
+								&_cover {
+									width: 200rpx;
+									height: 200rpx;
+								}
+								&_text {
+									background: #302e2f;
+									padding: 15rpx 20rpx;
+								}
+							}
+							
+							&_common {
+								padding: 14rpx 40rpx;
 							}
 						}
 					}
