@@ -42,7 +42,7 @@
 									<view class="specs_img_box_mask"></view>
 									<!-- 预览按钮 -->
 									<view class="specs_img_box_preview flex f-y-c f-x-c" @click.stop="preview(sku.img)">
-										<image src="../../img/preview.png"></image>
+										<image class="img" src="../../img/preview.png"></image>
 									</view>
 									<!-- 图片 -->
 									<view class="specs_img_box_cover bgImg" :style="{
@@ -362,15 +362,16 @@
 				var result = [];
 				
 				let resObj = this.r.result;
-				
-				Object.keys(resObj).forEach((key1, index)=>{
-					result[index] = "";
-					Object.keys(resObj[key1]).forEach(key2=>{
-						// 查找选中的属性
-						let item = resObj[key1][key2];
-						item.active ? result[index] = item.value : '';
+				if(resObj) {
+					Object.keys(resObj).forEach((key1, index)=>{
+						result[index] = "";
+						Object.keys(resObj[key1]).forEach(key2=>{
+							// 查找选中的属性
+							let item = resObj[key1][key2];
+							item.active ? result[index] = item.value : '';
+						})
 					})
-				})
+				}
 				
 				return result
 			},
@@ -880,7 +881,7 @@
 							border: 3rpx solid #e4e4e4;
 							overflow: hidden;
 							
-							&:not(&.act) {
+							&:not(.act) {
 								.specs_common {
 									color: #999999;
 								}
@@ -913,7 +914,7 @@
 									padding: 10rpx;
 									right: 8rpx;
 									top: 8rpx;
-									image {
+									.img {
 										width: 25rpx;
 										height: 25rpx;
 										transform: scale(1.2);
