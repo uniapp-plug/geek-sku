@@ -1,6 +1,6 @@
 <template>
-	<view class="sku" v-if="isV3 ? modelValue : value" @click="isMaskClose ? close : ''">
-		<view class="shopSpecsPopup">
+	<view class="sku" v-if="showSkuPopup" :class="skuPopupStyleShow ? 'show' : 'hide'" @click="isMaskClose ? close() : ''">
+		<view class="shopSpecsPopup" :class="shopSpecsPopupStyleShow ? 'show' : 'hide'" @click.stop>
 			<image class="close" src="../../img/close.png" @click="close"></image>
 			<view class="content">
 				<view class="info flex f-y-c">
@@ -218,6 +218,12 @@
 				// #ifndef VUE3
 				isV3: false,
 				// #endif
+				// 显示sku
+				showSkuPopup: false,
+				// 从低向上的动画显示
+				shopSpecsPopupStyleShow: false,
+				// 透明度消失动画, 让他关闭时看上不不那么生硬
+				skuPopupStyleShow: false
 			}
 		},
 		// methods 是一些用来更改状态与触发更新的函数
@@ -542,7 +548,7 @@
 					// 如果最小价格为空则直接赋值
 					if(minPrice === null) {
 						minPrice = sku.price;
-					} else if(minPrice > sku.price) { // 如果比最小价格低 就赋值
+					} else if(minPrice * 1 > sku.price * 1) { // 如果比最小价格低 就赋值
 						minPrice = sku.price;
 					}
 					// 如果大于最大价格则赋值
@@ -553,11 +559,11 @@
 					// 如果最小库存为空则直接赋值
 					if(minStock === null) {
 						minStock = sku.stock;
-					} else if(minStock > sku.stock) { // 如果比最小库存少 就赋值
+					} else if(minStock * 1 > sku.stock * 1) { // 如果比最小库存少 就赋值
 						minStock = sku.stock;
 					}
 					// 如果大于最大库存则赋值
-					if(maxStock < sku.stock) {
+					if(maxStock * 1 < sku.stock * 1) {
 						maxStock = sku.stock;
 					}
 				})
@@ -635,10 +641,24 @@
 				// #ifdef VUE3
 				this.$emit('update:modelValue', false);
 				// #endif
+				
 				// #ifndef VUE3
 				this.$emit('input', false);
 				// #endif
+				
+				// #ifdef H5
+				// fix by mehaotian 处理 h5 滚动穿透的问题
+				document.getElementsByTagName('body')[0].style.overflow = 'visible'
+				// #endif
+				
 				this.$emit('close');
+				
+				this.skuPopupStyleShow = false;
+				this.shopSpecsPopupStyleShow = false;
+				
+				setTimeout(()=>{
+					this.showSkuPopup = false;
+				}, 300)
 			},
 			
 			// 打开sku组件
@@ -646,10 +666,24 @@
 				// #ifdef VUE3
 				this.$emit('update:modelValue', true);
 				// #endif
+				
 				// #ifndef VUE3
 				this.$emit('input', true);
 				// #endif
+				
+				// #ifdef H5
+				// fix by mehaotian 处理 h5 滚动穿透的问题
+				document.getElementsByTagName('body')[0].style.overflow = 'hidden'
+				// #endif
+				
 				this.$emit('open');
+				
+				this.showSkuPopup = true;
+				
+				setTimeout(()=>{
+					this.skuPopupStyleShow = true;
+					this.shopSpecsPopupStyleShow = true;
+				})
 			},
 			
 			// 重置购买数量
@@ -748,6 +782,15 @@
 		top: 0;
 		background-color: rgba(0, 0, 0, 0.4);
 		z-index: 999;
+		transition: all 0.3s ease;
+		
+		&.show {
+			opacity: 1;
+		}
+		&.hide {
+			opacity: 0;
+		}
+		
 		.shopSpecsPopup {
 			background: #FFFFFF;
 			border-radius: 24rpx 24rpx 0 0;
@@ -756,7 +799,14 @@
 			box-sizing: border-box;
 			left: 0;
 			right: 0;
-			bottom: 0;
+			transition: all 0.3s ease;
+			
+			&.show {
+				bottom: 0%;
+			}
+			&.hide {
+				bottom: -100%;
+			}
 			
 			.close {
 				width: 40rpx;

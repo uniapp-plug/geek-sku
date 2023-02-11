@@ -12,7 +12,7 @@
 		}">-</view>
 		
 		<!-- 按钮 -->
-		<input type="number" :adjust-position="false" :style="{backgroundColor: bgColor}" :maxlength="-1" :value="inputValue" @input="input"  @blur="inputValue === '' ? inputValue = minValue : ''"/>
+		<input type="number" :adjust-position="false" :style="{backgroundColor: bgColor}" :maxlength="-1" :value="inputValue" @input="input"  @blur="blur"/>
 		
 		<view class="add" @click="change('+')" :style="{
 			lineHeight: height * 0.95 + 'rpx',
@@ -167,6 +167,17 @@
 					copyV = parseInt(copyV);
 				}
 				if(copyInputValue != copyV) {
+					// 触发chage事件
+					this.customEvent('change');
+				}
+			},
+			// 失焦事件
+			blur() {
+				// 如果清空了且未输入内容 则 在失焦后变为最小值
+				if(this.inputValue === '') {
+					this.inputValue = this.minValue;
+					// 更新绑定的数据
+					this.customEvent('update');
 					// 触发chage事件
 					this.customEvent('change');
 				}
